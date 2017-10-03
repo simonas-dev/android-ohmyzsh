@@ -1,0 +1,1 @@
+cp androidrc.sh ~/.androidrc
