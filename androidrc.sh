@@ -1,5 +1,5 @@
 export PATH=$ANDROID_HOME/platform-tools:$PATH
-export ANDROID_BUILD_AAPT=$ANDROID_HOME/build-tools/25.0.2/aapt
+export ANDROID_BUILD_AAPT=$ANDROID_HOME/build-tools/26.0.2/aapt
 export PATH=${PATH}:${ANDROID_HOME}/tools
 export PATH=${PATH}:${ANDROID_HOME}/platform-tools
 
