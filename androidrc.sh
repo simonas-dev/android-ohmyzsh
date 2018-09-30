@@ -1,5 +1,5 @@
 export PATH=$ANDROID_HOME/platform-tools:$PATH
-export ANDROID_BUILD_AAPT=$ANDROID_HOME/build-tools/26.0.2/aapt
+export ANDROID_BUILD_AAPT=$ANDROID_HOME/build-tools/28.0.0
 export PATH=${PATH}:${ANDROID_HOME}/tools
 export PATH=${PATH}:${ANDROID_HOME}/platform-tools
 
@@ -10,6 +10,24 @@ function adbc {
     adb connect $IP
     adb devices
 }
+
+function adbdemo {
+  CMD=$1
+  echo $CMD
+  if [ $CMD = "on" ]; then
+      adb shell settings put global sysui_demo_allowed 1
+      adb shell am broadcast -a com.android.systemui.demo -e command enter || exit
+      adb shell am broadcast -a com.android.systemui.demo -e command clock -e hhmm 1620
+      adb shell am broadcast -a com.android.systemui.demo -e command battery -e plugged false
+      adb shell am broadcast -a com.android.systemui.demo -e command battery -e level 100
+      adb shell am broadcast -a com.android.systemui.demo -e command network -e wifi show -e level 4
+      adb shell am broadcast -a com.android.systemui.demo -e command network -e mobile show -e datatype none -e level 4
+      adb shell am broadcast -a com.android.systemui.demo -e command notifications -e visible false
+    elif [ $CMD = "off" ]; then
+      adb shell am broadcast -a com.android.systemui.demo -e command exit
+    fi
+}
+
 
 # adbscr saves and opens a file (supports Ubuntu and macOS)
 # adbscr --save saves a file into currenct directory.
@@ -32,9 +50,10 @@ function adbscr {
 
     DEVICE_PATH="/sdcard/"$FILE_NAME
 
-
+        adbdemo on
     echo "Shoot"
     adb shell screencap -p $DEVICE_PATH
+    adbdemo off
     echo "Pull"
     adb pull $DEVICE_PATH $SAVE_PATH
     if [[ $OPEN_FLAG == 1 ]]; then
@@ -71,7 +90,7 @@ function adbpkg {
     if [ -n "$1" ]; then
         adbpkg2 $1
     else
-        APK_FILES=`find app/build/outputs/apk/*.apk`
+        APK_FILES=`find app/build/outputs/apk/debug/*.apk`
         COUNTER=0
         for FILE in $(echo $APK_FILES)
         do
@@ -106,8 +125,8 @@ function adbpkg2 {
 }
 
 function astart {
-    package=`$ANDROID_BUILD_AAPT dump badging app/build/outputs/apk/*-debug.apk | grep package | awk '{print $2}' | sed s/name=//g | sed s/\'//g`
-    activity=`$ANDROID_BUILD_AAPT dump badging app/build/outputs/apk/*-debug.apk | grep launchable-activity: | awk '{print $2}' | sed s/name=//g | sed s/\'//g`
+    package=`$ANDROID_BUILD_AAPT dump badging app/build/outputs/apk/debug/*.apk | grep package | awk '{print $2}' | sed s/name=//g | sed s/\'//g`
+    activity=`$ANDROID_BUILD_AAPT dump badging app/build/outputs/apk/debug/*.apk | grep launchable-activity: | awk '{print $2}' | sed s/name=//g | sed s/\'//g`
     if [ -n "$1" ]; then
     package=`$ANDROID_BUILD_AAPT dump badging $1 | grep package | awk '{print $2}' | sed s/name=//g | sed s/\'//g`
     activity=`$ANDROID_BUILD_AAPT dump badging $1 | grep launchable-activity: | awk '{print $2}' | sed s/name=//g | sed s/\'//g`
@@ -117,8 +136,8 @@ function astart {
 }
 
 function akill {
-    package=`$ANDROID_BUILD_AAPT dump badging app/build/outputs/apk/*-debug.apk | grep package | awk '{print $2}' | sed s/name=//g | sed s/\'//g`
-    activity=`$ANDROID_BUILD_AAPT dump badging app/build/outputs/apk/*-debug.apk | grep launchable-activity: | awk '{print $2}' | sed s/name=//g | sed s/\'//g`
+    package=`$ANDROID_BUILD_AAPT dump badging app/build/outputs/apk/debug/*.apk | grep package | awk '{print $2}' | sed s/name=//g | sed s/\'//g`
+    activity=`$ANDROID_BUILD_AAPT dump badging app/build/outputs/apk/debug/*.apk | grep launchable-activity: | awk '{print $2}' | sed s/name=//g | sed s/\'//g`
     if [ -n "$1" ]; then
     package=`$ANDROID_BUILD_AAPT dump badging $1 | grep package | awk '{print $2}' | sed s/name=//g | sed s/\'//g`
     activity=`$ANDROID_BUILD_AAPT dump badging $1 | grep launchable-activity: | awk '{print $2}' | sed s/name=//g | sed s/\'//g`
@@ -128,7 +147,7 @@ function akill {
 }
 
 function adbrealm {
-    package=`$ANDROID_BUILD_AAPT dump badging app/build/outputs/apk/*-debug.apk | grep package | awk '{print $2}' | sed s/name=//g | sed s/\'//g`
+    package=`$ANDROID_BUILD_AAPT dump badging app/build/outputs/apk/debug/*.apk | grep package | awk '{print $2}' | sed s/name=//g | sed s/\'//g`
     if [ -n "$1" ]; then
     package=`$ANDROID_BUILD_AAPT dump badging $1 | grep package | awk '{print $2}' | sed s/name=//g | sed s/\'//g`
     fi
@@ -141,7 +160,7 @@ alias adbd='adb devices'
 alias adbrip='adb kill-server'
 
 function adbclear {
-    package=`$ANDROID_BUILD_AAPT dump badging app/build/outputs/apk/*-debug.apk | grep package | awk '{print $2}' | sed s/name=//g | sed s/\'//g`
+    package=`$ANDROID_BUILD_AAPT dump badging app/build/outputs/apk/debug/*.apk | grep package | awk '{print $2}' | sed s/name=//g | sed s/\'//g`
     if [ -n "$1" ]; then
     package=`$ANDROID_BUILD_AAPT dump badging $1 | grep package | awk '{print $2}' | sed s/name=//g | sed s/\'//g`
     fi
@@ -150,7 +169,7 @@ function adbclear {
 }
 
 function adbremove {
-    package=`$ANDROID_BUILD_AAPT dump badging app/build/outputs/apk/*-debug.apk | grep package | awk '{print $2}' | sed s/name=//g | sed s/\'//g`
+    package=`$ANDROID_BUILD_AAPT dump badging app/build/outputs/apk/debug/*.apk | grep package | awk '{print $2}' | sed s/name=//g | sed s/\'//g`
     if [ -n "$1" ]; then
     package=`$ANDROID_BUILD_AAPT dump badging $1 | grep package | awk '{print $2}' | sed s/name=//g | sed s/\'//g`
     fi
