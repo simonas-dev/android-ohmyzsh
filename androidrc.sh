@@ -1,5 +1,5 @@
 export PATH=$ANDROID_HOME/platform-tools:$PATH
-export ANDROID_BUILD_AAPT=$ANDROID_HOME/build-tools/28.0.0
+export ANDROID_BUILD_AAPT=$ANDROID_HOME/build-tools/29.0.1
 export PATH=${PATH}:${ANDROID_HOME}/tools
 export PATH=${PATH}:${ANDROID_HOME}/platform-tools
 
@@ -28,6 +28,25 @@ function adbdemo {
     fi
 }
 
+function adbfzf {
+	adb shell 'pm list packages -f' | sed -e 's/.*=//' | fzf
+}
+
+function adbfzfopen {
+	P=`adbfzf`
+	adb shell monkey -p $P -c android.intent.category.LAUNCHER 1
+}
+
+function adbfzfclear {
+    P=`adbfzf`
+	adb shell pm clear "$P"
+	adb shell monkey -p "$P" -c android.intent.category.LAUNCHER 1
+}
+
+function adbfzfuninstall {
+    P=`adbfzf`
+    adb shell pm uninstall "$P"
+}
 
 # adbscr saves and opens a file (supports Ubuntu and macOS)
 # adbscr --save saves a file into currenct directory.
