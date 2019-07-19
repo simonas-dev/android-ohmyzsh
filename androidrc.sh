@@ -3,6 +3,10 @@ export ANDROID_BUILD_AAPT=$ANDROID_HOME/build-tools/29.0.1
 export PATH=${PATH}:${ANDROID_HOME}/tools
 export PATH=${PATH}:${ANDROID_HOME}/platform-tools
 
+alias adbd='adb devices'
+alias adbrip='adb kill-server'
+alias adbpaste="pbpaste | sed 's/ /\%s/g' | xargs adb shell input text"
+
 # adbc starts device debugging via Wi-Fi 
 function adbc {
     IP=`adb shell ifconfig wlan0 | grep 'inet addr:' | cut -d: -f2 | awk '{print $1}'`
@@ -28,8 +32,8 @@ function adbdemo {
     fi
 }
 
-function adbfzf {
-	adb shell 'pm list packages -f' | sed -e 's/.*=//' | fzf
+function adadb shell 'pm list packages -f' | sed -e 's/.*=//' |bfzf {
+	 fzf
 }
 
 function adbfzfopen {
@@ -174,9 +178,6 @@ function adbrealm {
     adb shell run-as $package cp $db_path /sdcard/
     adb pull /sdcard/default.realm .
 }
-
-alias adbd='adb devices'
-alias adbrip='adb kill-server'
 
 function adbclear {
     package=`$ANDROID_BUILD_AAPT dump badging app/build/outputs/apk/debug/*.apk | grep package | awk '{print $2}' | sed s/name=//g | sed s/\'//g`
