@@ -1,20 +1,30 @@
-# Android Shell Tools
-Aliases and other useful things.
+# Android Oh My Zsh Plugin
 
-## Install 
-Run `./install.sh`
+Various useful tools for developing Android apps.
 
-Add this to `.bashrc` or `.zshrc`
+## Prerequisites
+* [ohmyz.sh](https://ohmyz.sh/)
+* Android SDK
+* [fzf is a general-purpose command-line fuzzy finder](https://github.com/junegunn/fzf)
 
-### macOS
+## Installation
 
+Pull plugin into the zsh plugins dir:
+
+
+```zsh
+git clone git@github.com:simonassank/android-ohmyzsh.git $ZSH_CUSTOM/plugins/android --depth=1
 ```
+
+Into `.zshrc` file add:
+
+```zsh
+# Define `ANDROID_HOME`. E.g. for macOS
 export ANDROID_HOME=${HOME}/Library/Android/sdk
-source ~/.androidrc`
+
+plugins=(
+    android
+)
 ```
 
-### Ubuntu
-```
-export ANDROID_HOME=${HOME}/Android/Sdk
-source ~/.androidrc`
-```
+Reboot terminal or run `zsh` to restart the session.
