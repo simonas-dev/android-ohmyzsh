@@ -18,7 +18,7 @@ function adbrip {
 function aemu {
     EMU=$($ANDROID_HOME/emulator/emulator -list-avds | fzf)
     echo "Starting $EMU"
-    ($ANDROID_HOME/emulator/emulator -avd $EMU &) &> /dev/null
+    ($ANDROID_HOME/emulator/emulator -no-audio -no-skin -avd $EMU &) &> /dev/null
 }
 
 # Writes text on device
