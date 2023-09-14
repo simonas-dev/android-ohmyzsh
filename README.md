@@ -13,7 +13,7 @@ Pull plugin into the zsh plugins dir:
 
 
 ```zsh
-git clone git@github.com:simonassank/android-ohmyzsh.git $ZSH_CUSTOM/plugins/android --depth=1
+git clone https://github.com/simonas-dev/android-ohmyzsh.git $ZSH_CUSTOM/plugins/android --depth=1
 ```
 
 Into `.zshrc` file add:
