@@ -77,13 +77,13 @@ function adbdemo {
 }
 
 # Fuzzy search for app by package name
-function adbfzf {
+function appfind {
     adb shell 'pm list packages -f' | sed -e 's/.*=//' | fzf
 }
 
 # Fuzzy search for app to open on device by package name
-function adbfzfopen {
-    for P in $(adbfzf)
+function appopen {
+    for P in $(appfind)
     do
         echo "$P"
         adb shell monkey -p $P -c android.intent.category.LAUNCHER 1
@@ -91,33 +91,36 @@ function adbfzfopen {
 }
 
 # Fuzzy search for app to kill by package name
-function adbfzfkill {
-    for P in $(adbfzf)
+function appkill {
+    for P in $(appfind)
     do
         PID=`adb shell ps | grep $P | awk '{print $2}'`
-        EX="echo adb shell run-as $P kill $PID"
+        EX="adb shell run-as $P kill $PID"
         echo $EX
-        $(echo $EX)
+        print -s $EX
+        eval $EX
     done
 }
 
 # Fuzzy search for app to clear by package name
-function adbfzfclear {
-    for P in $(adbfzf)
+function appclear {
+    for P in $(appfind)
     do
         EX="adb shell pm clear $P"
         echo $EX
-        $(echo $EX)
+        history -s $EX
+        eval $EX
     done
 }
 
 # Fuzzy search for app to uninstall by package name
-function adbfzfuninstall {
-    for P in $(adbfzf)
+function appuninstall {
+    for P in $(appfind)
     do
-        EX="echo adb shell pm uninstall $P"
+        EX="adb shell pm uninstall $P"
         echo $EX
-        $(echo $EX)
+        print -s $EX
+        eval $EX
     done
 }
 
