@@ -14,6 +14,10 @@ function adbrip {
     adb kill-server
 }
 
+function asn {
+    adb get-serialno
+}
+
 # Start an emulator for a list of available ones.
 function aemu {
     EMU=$($ANDROID_HOME/emulator/emulator -list-avds | fzf)
