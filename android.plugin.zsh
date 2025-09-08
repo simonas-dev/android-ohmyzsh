@@ -81,6 +81,15 @@ function appfind {
     adb shell 'pm list packages -f' | sed -e 's/.*=//' | fzf
 }
 
+# Fuzzy search for app to dump package info by package name
+function appinfo {
+    for P in $(appfind)
+    do
+        echo "$P"
+        adb shell dumpsys package $P
+    done
+}
+
 # Fuzzy search for app to open on device by package name
 function appopen {
     for P in $(appfind)
