@@ -29,13 +29,39 @@ function aemu {
 # adbpaste - takes text from macOS clipboard and writes that.
 # adbpaste "hello" – uses the provided arg as text.
 function adbpaste {
-  if [ -n "$1" ]; then
-    TEXT=$1
-  else
+    local DEVICE=""
+  local TEXT=""
+  
+  # Parse arguments
+  while [[ $# -gt 0 ]]; do
+    case $1 in
+      -s)
+        DEVICE="$2"
+        shift 2
+        ;;
+      *)
+        TEXT="$1"
+        shift
+        ;;
+    esac
+  done
+
+  if [ -z "$TEXT" ]; then
     TEXT=`pbpaste`
   fi
-  TEXT=`echo "$TEXT" | sed 's/ /\%s/g' | sed 's/"/\\\\"/g'`
-  adb shell input text "$TEXT"
+
+  if [ -z "$TEXT" ]; then
+    echo "Clipboard empty!"
+    exit 1
+  fi
+
+  TEXT=$(printf "%q" "$TEXT")
+  
+  if [ -n "$DEVICE" ]; then
+    adb -s "$DEVICE" shell input text "$TEXT"
+  else
+    adb shell input text "$TEXT"
+  fi
 }
 
 # Automatically starts debuging session if device is connetted on the same network.
