@@ -22,7 +22,7 @@ function asn {
 function aemu {
     EMU=$($ANDROID_HOME/emulator/emulator -list-avds | fzf)
     echo "Starting $EMU"
-    ($ANDROID_HOME/emulator/emulator -no-audio -no-skin -avd -no-snapshot-load $EMU &) &> /dev/null
+    ($ANDROID_HOME/emulator/emulator -no-audio -no-skin -no-snapshot-load -avd $EMU &) &> /dev/null
 }
 
 # Writes text on device
